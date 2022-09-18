@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/ahmetzumber/kafka-playground/utils"
 	"github.com/segmentio/kafka-go"
 	"time"
@@ -9,8 +10,16 @@ import (
 
 func main() {
 	conn, _ := kafka.DialLeader(context.Background(), utils.NETWORK, utils.ADDRESS, utils.TOPIC_NAME, utils.PARTITION)
-	conn.SetWriteDeadline(time.Now().Add(time.Second * 10))
+	conn.SetReadDeadline(time.Now().Add(time.Second * 10))
 
-	conn.WriteMessages(kafka.Message{ Value: []byte("catch the second event !!") })
+	messages := conn.ReadBatch(1e3, 1e9)
+	bytes := make([]byte, 1e6)
+	for {
+		_, err := messages.Read(bytes)
+		if err != nil {
+			break
+		}
+		fmt.Println(string(bytes))
+	}
 }
 
