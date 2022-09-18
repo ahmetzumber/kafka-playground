@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/ahmetzumber/kafka-demo/utils"
+	"github.com/ahmetzumber/kafka-playground/utils"
 	"github.com/segmentio/kafka-go"
 	"time"
 )
